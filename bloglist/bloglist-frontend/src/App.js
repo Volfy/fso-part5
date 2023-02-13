@@ -1,15 +1,29 @@
 import { useState, useEffect } from 'react'
-import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import loginForm from './components/loginForm'
+import blogDisplay from './components/blogDisplay'
+import blogForm from './components/blogForm'
+import Notif from './components/Notif'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [message, setMessage] = useState('')
+  const [notifCol, setNotifCol] = useState('')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [newBlog, setNewBlog] = useState({title: '', author: '', url: ''})
+
+  const messager = (msg, isError) => {
+    setMessage(msg)
+    setNotifCol(
+    isError
+    ? '#ff0000' 
+    : '#00ff00'
+    ) 
+    setTimeout(() => setMessage(''), 5000)
+  }
 
   const handleLogin = async (e) => {
     e.preventDefault()
@@ -21,8 +35,7 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (e) {
-      setErrorMessage('Wrong Credentials')
-      setTimeout(() => setErrorMessage(null), 5000)
+      messager('Wrong Credentials', 1)
     }
     
   }
@@ -30,6 +43,9 @@ const App = () => {
   const handleLogout = () => {
     window.localStorage.removeItem('LoggedInUser')
     setUser(null)
+    setUsername('')
+    setPassword('')
+    setMessage('')
   }
 
   const addNewBlog = async (e) => {
@@ -39,14 +55,14 @@ const App = () => {
         const blog = await blogService.addNew(newBlog, user)
         setBlogs(blogs.concat({...newBlog, user: blog.user, likes: blog.likes, id: blog.id}))
         setNewBlog({title: '', author: '', url: ''})
-        setErrorMessage('Blog added')
+        messager(`Blog ${blog.title} by ${blog.author} added`, 0)
         return
       } catch (e) {
-        setErrorMessage('Unable to add new blog')
+        messager('Unable to add new blog', 1)
         return
       }
     }
-    setErrorMessage('Missing field')
+    messager('Missing fields', 1)
   }
 
   useEffect(() => {
@@ -66,30 +82,8 @@ const App = () => {
     return (
       <div>
         <h2>Log in to Application</h2>
-        <div>{errorMessage}</div>
-        <form onSubmit={handleLogin}>
-          <div>
-            <label htmlFor='username'>Username </label>
-            <input 
-              id='username'
-              type='text'
-              value={username}
-              name='Username'
-              onChange={({ target }) => setUsername(target.value)}
-            />
-          </div>
-          <div>
-            <label htmlFor='password'>Password </label>
-            <input 
-              id='password'
-              type='password'
-              value={password}
-              name='Password'
-              onChange={({ target }) => setPassword(target.value)}
-            />
-          </div>
-          <button type='submit'>Log In</button>
-        </form>
+        {Notif(message, notifCol)}
+        {loginForm(username, setUsername, password, setPassword, handleLogin)}
       </div>
     )
   }
@@ -101,47 +95,11 @@ const App = () => {
         <button onClick={handleLogout}>Logout</button>
       </div>
       <div>
-        <div>{errorMessage}</div>
         <h2>Create new blog</h2>
-        <form onSubmit={addNewBlog}>
-          <div>
-            <label htmlFor='title'>title:</label>
-            <input 
-              id='title'
-              type='text'
-              value={newBlog.title}
-              name='Title'
-              onChange={({ target }) => setNewBlog({...newBlog, title: target.value})}
-            />
-          </div>
-          <div>
-            <label htmlFor='author'>author:</label>
-            <input 
-              id='author'
-              type='text'
-              value={newBlog.author}
-              name='Author'
-              onChange={({ target }) => setNewBlog({...newBlog, author: target.value})}
-            />
-          </div>
-          <div>
-            <label htmlFor='url'>url:</label>
-            <input 
-              id='url'
-              type='text'
-              value={newBlog.url}
-              name='URL'
-              onChange={({ target }) => setNewBlog({...newBlog, url: target.value})}
-            />
-          </div>
-          <button type='submit'>Create</button>
-        </form>
+        {Notif(message, notifCol)}
+        {blogForm(newBlog, setNewBlog, addNewBlog)}
       </div>
-      <div>
-        {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
-        )}
-      </div>
+      {blogDisplay(blogs)}
     </div>
   )
 }
