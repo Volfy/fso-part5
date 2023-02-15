@@ -123,6 +123,7 @@ const App = () => {
     }
   }, [])
 
+  //// should this be done only after login?
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
