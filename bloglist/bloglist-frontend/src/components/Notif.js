@@ -1,4 +1,6 @@
-const Notif = (message, isError) => {
+import PropTypes from 'prop-types'
+
+const Notif = ({ message, isError }) => {
   // TAKEN FROM BOOTSTRAP!
   const notifStyle = {
     padding: 15,
@@ -8,16 +10,20 @@ const Notif = (message, isError) => {
     color: '#3c763d',
     backgroundColor: '#dff0d8',
     borderColor: '#d6e9c6',
-    ...(isError && 
-        {  
+    ...(isError
+        && {
           color: '#a94442',
           backgroundColor: '#f2dede',
-          borderColor: '#ebccd1'
+          borderColor: '#ebccd1',
         }
-    )
+    ),
   }
 
   return message && <div style={notifStyle}>{message}</div>
+}
+
+Notif.propTypes = {
+  message: PropTypes.string.isRequired,
 }
 
 export default Notif

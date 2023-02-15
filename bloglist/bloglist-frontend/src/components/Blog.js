@@ -1,13 +1,19 @@
 import { useState } from 'react'
+import PropTypes from 'prop-types'
 
-const Blog = ({blog, updateLikes, user, deleteBlog}) => {
+const Blog = ({
+  blog,
+  updateLikes,
+  user,
+  deleteBlog,
+}) => {
   const [isFullView, setFullView] = useState(false)
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
     border: 'solid',
     borderWidth: 1,
-    marginBottom: 5
+    marginBottom: 5,
   }
 
   const blogSmall = (
@@ -22,27 +28,35 @@ const Blog = ({blog, updateLikes, user, deleteBlog}) => {
       <div>
         {blog.title} by {blog.author}
         <button onClick={() => setFullView(!isFullView)}>Hide</button>
-      </div> 
-      <div>{blog.url}</div> 
-      <div>likes {blog.likes} 
+      </div>
+      <div>{blog.url}</div>
+      <div>likes {blog.likes}
         <button onClick={() => updateLikes(blog)}>Like</button>
-      </div> 
+      </div>
       <div>{blog.user.username}</div>
-      {blog.user.id === user.id &&
-        <button onClick={
+      {blog.user.id === user.id
+        && <button onClick={
           () => {
+            // eslint-disable-next-line no-alert
             if (window.confirm(
-              `Do you want to delete ${blog.title} by ${blog.author}?`
+              `Do you want to delete ${blog.title} by ${blog.author}?`,
             )) {
               deleteBlog(blog, user)
             }
           }}
         >Remove</button>
-      } 
+      }
     </div>
   )
 
   return isFullView ? blogBig : blogSmall
+}
+
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
+  updateLikes: PropTypes.func.isRequired,
+  deleteBlog: PropTypes.func.isRequired,
 }
 
 export default Blog
