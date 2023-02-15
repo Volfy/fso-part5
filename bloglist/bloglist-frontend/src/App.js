@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import LoginForm from './components/LoginForm'
@@ -10,15 +10,15 @@ import Notif from './components/Notif'
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [message, setMessage] = useState('')
-  const [notifCol, setNotifCol] = useState('')
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const [notifColour, setNotifColour] = useState('')
+
   const [user, setUser] = useState(null)
-  const [newBlog, setNewBlog] = useState({title: '', author: '', url: ''})
+  
+  // message helper function
 
   const messager = (msg, isError) => {
     setMessage(msg)
-    setNotifCol(
+    setNotifColour(
     isError
     ? '#ff0000' 
     : '#00ff00'
@@ -26,46 +26,55 @@ const App = () => {
     setTimeout(() => setMessage(''), 5000)
   }
 
-  const handleLogin = async (e) => {
-    e.preventDefault()
+  // login stuff
 
+  const handleLogin = async (credsObject) => {
     try {
-      const user = await loginService.login({username, password})
+      const user = await loginService.login(credsObject)
       window.localStorage.setItem('LoggedInUser', JSON.stringify(user))
       setUser(user)
-      setUsername('')
-      setPassword('')
       messager('', 0)
     } catch (e) {
       messager('Wrong Credentials', 1)
     }
-    
   }
+
+  // login form auto hides once logged in. useRef unnecessary
+  
+  const loginForm = () => (
+    <Togglable buttonLabel='login'>
+      <LoginForm handleLogin={handleLogin}/>
+    </Togglable>
+  )
 
   const handleLogout = () => {
     window.localStorage.removeItem('LoggedInUser')
     setUser(null)
-    setUsername('')
-    setPassword('')
     messager('', 0)
   }
 
-  const addNewBlog = async (e) => {
-    e.preventDefault()
-    if (newBlog.title && newBlog.url && newBlog.author) {
-      try {
-        const blog = await blogService.addNew(newBlog, user)
-        setBlogs(blogs.concat({...newBlog, user: blog.user, likes: blog.likes, id: blog.id}))
-        setNewBlog({title: '', author: '', url: ''})
-        messager(`Blog ${blog.title} by ${blog.author} added`, 0)
-        return
-      } catch (e) {
-        messager('Unable to add new blog', 1)
-        return
-      }
+  // blog stuff
+
+  const addNewBlog = async (blogObject) => {
+    blogFormRef.current.toggleVisibility()
+    try {
+      const blog = await blogService.addNew(blogObject, user)
+      setBlogs(blogs.concat({...blogObject, user: blog.user, likes: blog.likes, id: blog.id}))
+      messager(`Blog ${blog.title} by ${blog.author} added`, 0)
+    } catch (e) {
+      messager('Unable to add new blog', 1)
     }
-    messager('Missing fields', 1)
   }
+
+  const blogFormRef = useRef()
+
+  const blogForm = () => (
+    <Togglable buttonLabel='add blog' ref={blogFormRef}>
+      <BlogForm addNewBlog={addNewBlog} messager={messager}/>
+    </Togglable>
+  )
+
+  // effects
 
   useEffect(() => {
     const loggedInUser = window.localStorage.getItem('LoggedInUser')
@@ -80,20 +89,14 @@ const App = () => {
     )  
   }, [])
 
+  // returns
+
   if (user === null) {
     return (
       <div>
         <h2>Log in to Application</h2>
-        {Notif(message, notifCol)}
-        <Togglable buttonLabel='login'>
-            <LoginForm 
-              username={username}
-              password={password}
-              setUsername={setUsername}
-              setPassword={setPassword}
-              handleLogin={handleLogin}
-            />
-        </Togglable>
+        {Notif(message, notifColour)}
+        {loginForm()}
       </div>
     )
   }
@@ -106,14 +109,8 @@ const App = () => {
       </div>
       <div>
         <h2>Create new blog</h2>
-        {Notif(message, notifCol)}
-        <Togglable buttonLabel='add blog'>
-            <BlogForm 
-              newBlog={newBlog}
-              setNewBlog={setNewBlog}
-              addNewBlog={addNewBlog}
-            />
-        </Togglable>
+        {Notif(message, notifColour)}
+        {blogForm()}
       </div>
       {blogDisplay(blogs)}
     </div>
