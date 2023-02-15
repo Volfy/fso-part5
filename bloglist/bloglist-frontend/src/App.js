@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import blogService from './services/blogs'
 import loginService from './services/login'
-import loginForm from './components/loginForm'
+import LoginForm from './components/LoginForm'
 import blogDisplay from './components/blogDisplay'
-import blogForm from './components/blogForm'
+import BlogForm from './components/BlogForm'
+import Togglable from './components/Togglable'
 import Notif from './components/Notif'
 
 const App = () => {
@@ -34,6 +35,7 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+      messager('', 0)
     } catch (e) {
       messager('Wrong Credentials', 1)
     }
@@ -45,7 +47,7 @@ const App = () => {
     setUser(null)
     setUsername('')
     setPassword('')
-    setMessage('')
+    messager('', 0)
   }
 
   const addNewBlog = async (e) => {
@@ -83,7 +85,15 @@ const App = () => {
       <div>
         <h2>Log in to Application</h2>
         {Notif(message, notifCol)}
-        {loginForm(username, setUsername, password, setPassword, handleLogin)}
+        <Togglable buttonLabel='login'>
+            <LoginForm 
+              username={username}
+              password={password}
+              setUsername={setUsername}
+              setPassword={setPassword}
+              handleLogin={handleLogin}
+            />
+        </Togglable>
       </div>
     )
   }
@@ -97,7 +107,13 @@ const App = () => {
       <div>
         <h2>Create new blog</h2>
         {Notif(message, notifCol)}
-        {blogForm(newBlog, setNewBlog, addNewBlog)}
+        <Togglable buttonLabel='add blog'>
+            <BlogForm 
+              newBlog={newBlog}
+              setNewBlog={setNewBlog}
+              addNewBlog={addNewBlog}
+            />
+        </Togglable>
       </div>
       {blogDisplay(blogs)}
     </div>

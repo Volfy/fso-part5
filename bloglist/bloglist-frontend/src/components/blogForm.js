@@ -1,4 +1,4 @@
-const blogForm = (newBlog, setNewBlog, addNewBlog) => <form onSubmit={addNewBlog}>
+const blogForm = ({newBlog, setNewBlog, addNewBlog}) => <form onSubmit={addNewBlog}>
 <div>
   <label htmlFor='title'>title:</label>
   <input 

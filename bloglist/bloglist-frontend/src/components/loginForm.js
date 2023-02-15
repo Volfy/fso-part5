@@ -1,4 +1,4 @@
-const loginForm = (username, setUsername, password, setPassword, handleLogin) => 
+const loginForm = ({username, setUsername, password, setPassword, handleLogin}) => 
 <form onSubmit={handleLogin}>
   <div>
     <label htmlFor='username'>Username </label>
