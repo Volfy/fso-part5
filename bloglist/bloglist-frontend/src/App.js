@@ -9,20 +9,16 @@ import loginService from './services/login'
 import blogService from './services/blogs'
 
 const App = () => {
-  const [notifColour, setNotifColour] = useState('')
+  const [isError, setError] = useState(false)
   const [message, setMessage] = useState('')
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
   
   // message helper function
 
-  const messager = (msg, isError) => {
+  const messager = (msg, isErrorVal) => {
     setMessage(msg)
-    setNotifColour(
-    isError
-    ? '#ff0000' 
-    : '#00ff00'
-    ) 
+    setError(isErrorVal)
     setTimeout(() => setMessage(''), 5000)
   }
 
@@ -139,7 +135,7 @@ const App = () => {
     return (
       <div>
         <h2>Log in to Application</h2>
-        {Notif(message, notifColour)}
+        {Notif(message, isError)}
         {loginForm()}
       </div>
     )
@@ -154,7 +150,7 @@ const App = () => {
       </div>
       <div>
         <h2>Create new blog</h2>
-        {Notif(message, notifColour)}
+        {Notif(message, isError)}
         {blogForm()}
       </div>
       {blogDisplay(blogs)}
