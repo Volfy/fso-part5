@@ -101,7 +101,6 @@ const App = () => {
     )
   }
   
-  console.log(blogs)
   return (
     <div>
       <h2>blogs</h2>
