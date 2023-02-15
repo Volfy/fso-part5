@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const Blog = ({blog, updateLikes}) => {
+const Blog = ({blog, updateLikes, user, deleteBlog}) => {
   const [isFullView, setFullView] = useState(false)
   const blogStyle = {
     paddingTop: 10,
@@ -19,13 +19,26 @@ const Blog = ({blog, updateLikes}) => {
 
   const blogBig = (
     <div style={blogStyle}>
-      <div>{blog.title} by {blog.author}</div> 
+      <div>
+        {blog.title} by {blog.author}
+        <button onClick={() => setFullView(!isFullView)}>Hide</button>
+      </div> 
       <div>{blog.url}</div> 
       <div>likes {blog.likes} 
         <button onClick={() => updateLikes(blog)}>Like</button>
       </div> 
       <div>{blog.user.username}</div>
-      <button onClick={() => setFullView(!isFullView)}>Hide</button>
+      {blog.user.id === user.id &&
+        <button onClick={
+          () => {
+            if (window.confirm(
+              `Do you want to delete ${blog.title} by ${blog.author}?`
+            )) {
+              deleteBlog(blog, user)
+            }
+          }}
+        >Remove</button>
+      } 
     </div>
   )
 

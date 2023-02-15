@@ -82,6 +82,16 @@ const App = () => {
     }
   }
 
+  const deleteBlog = async (blog, user) => {
+    try {
+      await blogService.deleteBlog(blog.id, user)
+      setBlogs(blogs.filter((b) => b.id !== blog.id))
+      messager(`Deleted ${blog.title} by ${blog.author}`)
+    } catch (e) {
+      messager('Unable to delete blog', 1)
+    }
+  }
+
   const blogFormRef = useRef()
 
   const blogForm = () => (
@@ -89,13 +99,21 @@ const App = () => {
       <BlogForm addNewBlog={addNewBlog} messager={messager}/>
     </Togglable>
   )
+  
+
 
   const blogDisplay = (blogs) => (
   <div>
     {blogs
       .sort((a, b) => b.likes - a.likes)
       .map(blog =>
-        <Blog key={blog.id} blog={blog} updateLikes={updateLikes}/>
+        <Blog 
+          key={blog.id} 
+          blog={blog} 
+          updateLikes={updateLikes}
+          user={user}
+          deleteBlog={deleteBlog}
+          />
     )}
   </div>
   )

@@ -54,7 +54,6 @@ router.delete('/:id', userExtractor, async (req, res) => {
   return res.status(204).end()
 })
 
-//
 router.put('/:id', async (req, res) => {
   const { body } = req
   const blog = {
