@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import blogDisplay from './components/blogDisplay'
+import Blog from './components/Blog'
 import Togglable from './components/Togglable'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
@@ -74,6 +74,14 @@ const App = () => {
     </Togglable>
   )
 
+  const blogDisplay = (blogs) => (
+  <div>
+    {blogs.map(blog =>
+      <Blog key={blog.id} blog={blog} />
+    )}
+  </div>
+  )
+
   // effects
 
   useEffect(() => {
@@ -100,7 +108,7 @@ const App = () => {
       </div>
     )
   }
-  
+
   return (
     <div>
       <h2>blogs</h2>
