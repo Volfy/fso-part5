@@ -66,6 +66,22 @@ const App = () => {
     }
   }
 
+  const updateLikes = async (blogObject) => {
+    const {user, ...blogToUpdate} = {
+      ...blogObject, 
+      userId: blogObject.user.id,
+      likes: blogObject.likes + 1,
+    }
+
+    try {
+      const blog = await blogService.updateBlog(blogToUpdate)
+      setBlogs(blogs.map((b) => b.id === blogObject.id ? blog : b))
+      messager(`Liked ${blog.title} by ${blog.author}`, 0)
+    } catch (e) {
+      messager('Unable to like blog', 1)
+    }
+  }
+
   const blogFormRef = useRef()
 
   const blogForm = () => (
@@ -77,7 +93,7 @@ const App = () => {
   const blogDisplay = (blogs) => (
   <div>
     {blogs.map(blog =>
-      <Blog key={blog.id} blog={blog} />
+      <Blog key={blog.id} blog={blog} updateLikes={updateLikes}/>
     )}
   </div>
   )

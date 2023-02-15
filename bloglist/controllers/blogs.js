@@ -62,9 +62,11 @@ router.put('/:id', async (req, res) => {
     author: body.author,
     url: body.url,
     likes: body.likes,
+    user: body.userId,
   }
-  const updated = await Blog.findByIdAndUpdate(req.params.id, blog)
-  return res.json(updated).end()
+  const updated = await Blog.findByIdAndUpdate(req.params.id, blog, { new: true })
+  const returned = await updated.populate('user', { username: 1, name: 1 })
+  return res.json(returned).end()
 })
 
 module.exports = router
