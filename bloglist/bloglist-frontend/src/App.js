@@ -1,17 +1,17 @@
 import { useState, useEffect, useRef } from 'react'
-import blogService from './services/blogs'
-import loginService from './services/login'
-import LoginForm from './components/LoginForm'
 import blogDisplay from './components/blogDisplay'
-import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
+import LoginForm from './components/LoginForm'
+import BlogForm from './components/BlogForm'
 import Notif from './components/Notif'
 
-const App = () => {
-  const [blogs, setBlogs] = useState([])
-  const [message, setMessage] = useState('')
-  const [notifColour, setNotifColour] = useState('')
+import loginService from './services/login'
+import blogService from './services/blogs'
 
+const App = () => {
+  const [notifColour, setNotifColour] = useState('')
+  const [message, setMessage] = useState('')
+  const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
   
   // message helper function
@@ -39,8 +39,8 @@ const App = () => {
     }
   }
 
-  // login form auto hides once logged in. useRef unnecessary
-  
+  //// login form auto hides, useRef unnecessary
+
   const loginForm = () => (
     <Togglable buttonLabel='login'>
       <LoginForm handleLogin={handleLogin}/>
@@ -100,6 +100,8 @@ const App = () => {
       </div>
     )
   }
+  
+  console.log(blogs)
   return (
     <div>
       <h2>blogs</h2>
