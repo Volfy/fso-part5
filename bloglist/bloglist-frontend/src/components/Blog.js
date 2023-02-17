@@ -17,20 +17,20 @@ const Blog = ({
   }
 
   const blogSmall = (
-    <div style={blogStyle}>
+    <div style={blogStyle} className='blog'>
       {blog.title} by {blog.author}
       <button onClick={() => setFullView(!isFullView)}>View</button>
     </div>
   )
 
   const blogBig = (
-    <div style={blogStyle}>
+    <div style={blogStyle} className='blog'>
       <div>
         {blog.title} by {blog.author}
         <button onClick={() => setFullView(!isFullView)}>Hide</button>
       </div>
       <div>{blog.url}</div>
-      <div>likes {blog.likes}
+      <div>{blog.likes} likes
         <button onClick={() => updateLikes(blog)}>Like</button>
       </div>
       <div>{blog.user.username}</div>
