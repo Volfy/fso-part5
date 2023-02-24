@@ -80,7 +80,7 @@ describe('Blog app', function() {
         const blog = {
           title: 'Random Title',
           author: 'Real Author',
-          url: 'website.co.uk'
+          url: 'website.com'
         }
         cy.createBlog(blog)
       })
@@ -121,15 +121,54 @@ describe('Blog app', function() {
 
     describe('when multiple blogs exist', function() {
       beforeEach(function() {
+        cy.createBlog({
+          title: 'Title with second most likes',
+          author: 'James',
+          url: 'web2.com',
+        })
+        cy.createBlog({
+          title: 'Title with least likes',
+          author: 'James',
+          url: 'web.com',
+        })
+        cy.createBlog({
+          title: 'Title with most likes',
+          author: 'James',
+          url: 'web.com',
+        })
 
+        cy.contains('View').click()
+        cy.contains('View').click()
+        cy.contains('View').click()
       })
 
       it('blogs are ordered according to likes', function() {
+        const blogs = [
+          cy.get('.blog').contains('with most likes').parent(), 
+          cy.get('.blog').contains('with second most likes').parent(), 
+          cy.get('.blog').contains('with least likes').parent(),
+        ] 
+        blogs[0].contains('Like').click()
+        cy.wait(400)
+        blogs[0].contains('Like').click()
+        cy.wait(400)
+        blogs[0].contains('Like').click()
+        cy.wait(400)
+        blogs[0].parent().contains('3 likes')
 
-      })
-      
-      it('blogs will change position if liked enough', function() {
+        blogs[1].contains('Like').click()
+        cy.wait(400)
+        blogs[1].contains('Like').click()
+        cy.wait(400)
+        blogs[1].parent().contains('2 likes')
 
+        blogs[2].contains('Like').click()
+        cy.wait(400)
+        blogs[2].parent().contains('1 likes')
+        
+        cy.get('.blog').eq(0).contains('with most likes')
+        cy.get('.blog').eq(1).contains('with second most likes')
+        cy.get('.blog').eq(2).contains('with least likes')
       })
     })
     
