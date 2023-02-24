@@ -19,7 +19,7 @@ const Notif = ({ message, isError }) => {
     ),
   }
 
-  return message && <div style={notifStyle}>{message}</div>
+  return message && <div style={notifStyle} id='notif'>{message}</div>
 }
 
 Notif.propTypes = {

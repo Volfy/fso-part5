@@ -38,9 +38,7 @@ const App = () => {
   /// login form auto hides, useRef unnecessary
 
   const loginForm = () => (
-    <Togglable buttonLabel='login'>
-      <LoginForm handleLogin={handleLogin}/>
-    </Togglable>
+    <LoginForm handleLogin={handleLogin}/>
   )
 
   const handleLogout = () => {
@@ -96,13 +94,13 @@ const App = () => {
   }
 
   const blogForm = () => (
-    <Togglable buttonLabel='add blog' ref={blogFormRef}>
+    <Togglable buttonLabel='add blog' idName='show-blog-form-btn' ref={blogFormRef}>
       <BlogForm addNewBlog={addNewBlog} messager={messager}/>
     </Togglable>
   )
 
   const blogDisplay = (passedBlogs) => (
-    <div>
+    <div className='bloglist'>
       {passedBlogs
         .sort((a, b) => b.likes - a.likes)
         .map((blog) => <Blog

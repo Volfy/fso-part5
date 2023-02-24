@@ -36,10 +36,10 @@ content-type: application/json
 ###
 POST http://localhost:3003/api/blogs HTTP/1.1
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImZha2VmYWtlMiIsImlkIjoiNjNlNTBiM2NhYTM1NjJkMWJmODM1ZjczIiwiaWF0IjoxNjc2MDQzMTg4fQ.cuXez2MVRQk5Hck5S4iyyfWG6W_UDIPkZgl7AKJEF0Q
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImNhbnQgZGVsZXRlIiwiaWQiOiI2M2Y4YjA0ZDg3MDNhYTUxNTRmMjliZGIiLCJpYXQiOjE2NzcyNDI2NTB9.SKdA59_SwFFxw3k1uEJF94xbxjGk14IyKxP0NiZSgo0
 
 {
-    "title": "To 44444",
+    "title": "To 4444434344",
     "author": "John doe2",
     "url": "fakeurl2.ssss",
     "likes": 23
